@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HeatIndexTest {
 
-    private static final double DELTA = 0.1d + APPROXIMATION_ERROR;
+    private static final double DELTA = 1.0d + APPROXIMATION_ERROR;
     private HeatIndex _sut = new HeatIndex();
 
     // I cannot seem to get this to work in IDEA, nor with maven >:[
