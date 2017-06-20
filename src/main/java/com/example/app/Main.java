@@ -1,5 +1,6 @@
 package com.example.app;
 
+import com.example.calculations.HeatIndex;
 import com.example.calculations.Humidex;
 
 public class Main {
@@ -10,6 +11,12 @@ public class Main {
         double humidexValue = humidex.calculateHumidexValue(centigrades, dewPointCelsius);
 
         return "Humidex: " + humidexValue + "\t - " + humidex.humidexToString(humidexValue);
+    }
+
+    private static String heatIndexOutput(double centigrades, double relativeHumidityPercent) {
+        HeatIndex heatIndex = new HeatIndex();
+        double heatIndexValue = heatIndex.calculatePerceivedCelsiusTemperatureFor(centigrades, relativeHumidityPercent);
+        return "Heat Index " + heatIndexValue + " +/-" + HeatIndex.APPROXIMATION_ERROR + "°C";
     }
 
     /**
@@ -27,7 +34,9 @@ public class Main {
                 double centigrades = Double.parseDouble(args[i]);
                 double relativeHumidityPercent = Double.parseDouble(args[i + 1]);
                 System.out.println(humidexOutput(centigrades, relativeHumidityPercent));
+                System.out.println(heatIndexOutput(centigrades, relativeHumidityPercent));
             }
         }
     }
+
 }
