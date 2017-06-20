@@ -34,16 +34,19 @@ public class HeatIndexTest {
         temperatureCelsius = 27.0d;
         percentRelativeHumidity = 40.0d;
         perceivedTemperatureCentigrades = 27.0d;
-        assertEquals(perceivedTemperatureCentigrades, _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity), DELTA);
+        double actual = _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity);
+        assertEquals(perceivedTemperatureCentigrades, actual, DELTA);
 
         temperatureCelsius = 30.0d;
         percentRelativeHumidity = 50.0d;
         perceivedTemperatureCentigrades = 31.0d;
-        assertEquals(perceivedTemperatureCentigrades, _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity), DELTA);
+        actual = _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity);
+        assertEquals(perceivedTemperatureCentigrades, actual, DELTA);
 
         temperatureCelsius = 32.0d;
         percentRelativeHumidity = 60.0d;
         perceivedTemperatureCentigrades = 38.0d;
-        assertEquals(perceivedTemperatureCentigrades, _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity), DELTA);
+        actual = _sut.calculatePerceivedCelsiusTemperatureFor(temperatureCelsius, percentRelativeHumidity);
+        assertEquals(perceivedTemperatureCentigrades, actual, DELTA);
     }
 }

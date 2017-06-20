@@ -1,21 +1,24 @@
 package com.example.calculations;
 
+import java.math.BigDecimal;
+
 /**
  * American version of the (Canadian) Humidex, based on Fahrenheit.
  * Confer https://en.m.wikipedia.org/wiki/Heat_index
  */
 public class HeatIndex {
 
-    private static final double C1 = -42.379d;
-    private static final double C2 = 2.04901523d;
-    private static final double C3 = 10.14333127d;
-    private static final double C4 = -0.22475541d;
-    private static final double C5 = -6.83783E-03d;
-    private static final double C6 = -5.481717E-02d;
-    private static final double C7 = 1.22874E-03d;
-    private static final double C8 = 8.5282E-04d;
-    private static final double C9 = -1.99E-06d;
     public static double APPROXIMATION_ERROR = 1.3d / 1.8d;
+
+    private static final BigDecimal C1 = bd(-42.379d);
+    private static final BigDecimal C2 = bd(2.04901523d);
+    private static final BigDecimal C3 = bd(10.14333127d);
+    private static final BigDecimal C4 = bd(-0.22475541d);
+    private static final BigDecimal C5 = bd(-6.83783E-03d);
+    private static final BigDecimal C6 = bd(-5.481717E-02d);
+    private static final BigDecimal C7 = bd(1.22874E-03d);
+    private static final BigDecimal C8 = bd(8.5282E-04d);
+    private static final BigDecimal C9 = bd(-1.99E-06d);
 
     /**
      * @param temperatureCelsius "ambient dry-bulb temperature"
@@ -23,20 +26,29 @@ public class HeatIndex {
      */
     public double calculatePerceivedCelsiusTemperatureFor(double temperatureCelsius, double percentRelativeHumidity) {
 
-        double t = toFahrenheit(temperatureCelsius);
+        BigDecimal t = toFahrenheit(bd(temperatureCelsius));
+        BigDecimal rh = bd(percentRelativeHumidity);
 
-        double heatIndexFahrenheit =
-                C1 +
-                        C2 * t +
-                        C3 * percentRelativeHumidity +
-                        C4 * t * percentRelativeHumidity +
-                        C5 * t * t +
-                        C6 * percentRelativeHumidity * percentRelativeHumidity +
-                        C7 * t * t * percentRelativeHumidity +
-                        C8 * t * percentRelativeHumidity * percentRelativeHumidity +
-                        C9 * t * t * percentRelativeHumidity * percentRelativeHumidity;
+        BigDecimal heatIndexFahrenheit =
+                C1.add(
+                        C2.multiply(t)
+                ).add(
+                        C3.multiply(rh)
+                ).add(
+                        C4.multiply(t).multiply(rh)
+                ).add(
+                        C5.multiply(t).multiply(t)
+                ).add(
+                        C6.multiply(rh).multiply(rh)
+                ).add(
+                        C7.multiply(t).multiply(t).multiply(rh)
+                ).add(
+                        C8.multiply(t).multiply(rh).multiply(rh)
+                ).add(
+                        C9.multiply(t).multiply(t).multiply(rh).multiply(rh)
+                );
 
-        return toCelsius(heatIndexFahrenheit);
+        return toCelsius(d(heatIndexFahrenheit));
     }
 
     public String heatIndexToString(double heatIndexCelsius) {
@@ -53,11 +65,25 @@ public class HeatIndex {
         }
     }
 
+
     private double toCelsius(double temperatureFahrenheit) {
         return (temperatureFahrenheit - 32.0d) / 1.8d;
     }
 
-    private double toFahrenheit(double temperatureCelsius) {
-        return temperatureCelsius * 1.8d + 32.0d;
+    // divide throws ArithmeticExceptions often - will use double for converting result back
+//    private BigDecimal toCelsius(BigDecimal temperatureFahrenheit) {
+//        return (temperatureFahrenheit.subtract(bd(32.0d))).divide(bd(1.8d));
+//    }
+
+    private BigDecimal toFahrenheit(BigDecimal temperatureCelsius) {
+        return temperatureCelsius.multiply(bd(1.8d)).add(bd(32.0d));
+    }
+
+    private static double d(BigDecimal bd) {
+        return bd.doubleValue();
+    }
+
+    private static BigDecimal bd(double aDouble) {
+        return new BigDecimal(aDouble);
     }
 }
